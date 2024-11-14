@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import ProductsPage from './pages/ProductsPage'
+import ProductVoirPlus from './pages/ProductVoirPlus'
+import axios from 'axios'
 
-function App() {
+export default function App() {
+
+
+  const [products, setProducts] = useState([])
+
+    useEffect(() => {
+        axios.get("https://fakestoreapi.com/products").then(res => {
+
+            setProducts(res.data)
+
+        }).catch(e => {
+            console.log("Ily'a un erreur !")
+            console.error(e)
+        })
+    }, [])
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+      <Routes>
+          <Route path='/' element={<ProductsPage products={products} />} />
+          <Route path='/product/:id' element={<ProductVoirPlus products={products} />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
-
-export default App;
